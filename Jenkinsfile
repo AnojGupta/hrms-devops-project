@@ -3,6 +3,18 @@ pipeline {
 
     stages {
 
+        stages {
+
+                stage('Environment Test') {
+                    steps {
+                        sh '''
+                            echo "Job Name: $JOB_NAME"
+                            echo "Build Number: $BUILD_NUMBER"
+                            echo "Workspace: $WORKSPACE"
+                            echo "Build URL: $BUILD_URL"
+                        '''
+                    }
+                }
         stage('Backend Build') {
             steps {
                 dir('backend/hrms') {
