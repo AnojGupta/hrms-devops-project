@@ -24,5 +24,25 @@ pipeline {
             }
         }
 
+        stage('Frontend Build') {
+            steps {
+                dir('frontend/hrms-ui') {
+                    sh '''
+                        echo "Node:"
+                        node -v
+
+                        echo "NPM:"
+                        npm -v
+
+                        echo "Installing dependencies..."
+                        npm install
+
+                        echo "Building frontend..."
+                        npm run build
+                    '''
+                }
+            }
+        }
+
     }
 }
