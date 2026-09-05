@@ -1,0 +1,66 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: hrms-postgres
+
+    environment:
+      POSTGRES_DB: hrms_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+
+    volumes:
+      - hrms-postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d hrms_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - hrms-network
+
+
+  backend:
+    image: hrms-backend:1.0
+    container_name: hrms-backend
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      SERVER_PORT: 8082
+      DB_URL: jdbc:postgresql://postgres:5432/hrms_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      JWT_SECRET: 1opCuyjUk8RFCS8zxUtxWMia010E318Uw0p9zILuSTk=
+
+    ports:
+      - "8082:8082"
+
+    networks:
+      - hrms-network
+
+
+  frontend:
+    image: hrms-frontend:1.0
+    container_name: hrms-frontend
+
+    depends_on:
+      - backend
+
+    ports:
+      - "5174:80"
+
+    networks:
+      - hrms-network
+
+
+volumes:
+  hrms-postgres-data:
+
+
+networks:
+  hrms-network:
