@@ -48,18 +48,18 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh '''
-                    export PATH="/opt/homebrew/bin:$PATH"
+                    export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
 
                     echo "Docker:"
                     docker --version
 
-                    echo "Building backend Docker image..."
+                    echo "Building backend image..."
                     docker build -t hrms-backend:${BUILD_NUMBER} backend/hrms
 
-                    echo "Building frontend Docker image..."
+                    echo "Building frontend image..."
                     docker build -t hrms-frontend:${BUILD_NUMBER} frontend/hrms-ui
 
-                    echo "Docker images created:"
+                    echo "Docker images:"
                     docker images | grep -E "hrms-backend|hrms-frontend"
                 '''
             }
