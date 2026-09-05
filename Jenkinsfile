@@ -28,6 +28,8 @@ pipeline {
             steps {
                 dir('frontend/hrms-ui') {
                     sh '''
+                        export PATH="/opt/homebrew/bin:$PATH"
+
                         echo "Node:"
                         node -v
 
