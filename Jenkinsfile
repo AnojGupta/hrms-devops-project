@@ -4,9 +4,11 @@ pipeline {
 
     stages {
 
-        stage('Test Pipeline') {
+        stage('Backend Build') {
             steps {
-                echo 'Jenkins Pipeline is working!'
+                dir('backend/hrms') {
+                    sh 'mvn clean package'
+                }
             }
         }
 
