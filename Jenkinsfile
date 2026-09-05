@@ -1,5 +1,4 @@
 pipeline {
-
     agent any
 
     stages {
@@ -46,5 +45,24 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                sh '''
+                    export PATH="/opt/homebrew/bin:$PATH"
+
+                    echo "Docker:"
+                    docker --version
+
+                    echo "Building backend Docker image..."
+                    docker build -t hrms-backend:${BUILD_NUMBER} backend/hrms
+
+                    echo "Building frontend Docker image..."
+                    docker build -t hrms-frontend:${BUILD_NUMBER} frontend/hrms-ui
+
+                    echo "Docker images created:"
+                    docker images | grep -E "hrms-backend|hrms-frontend"
+                '''
+            }
+        }
     }
 }
