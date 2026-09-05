@@ -75,5 +75,45 @@ pipeline {
                 '''
             }
         }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+                        echo "Logging into Docker Hub..."
+
+                        echo "$DOCKER_PASSWORD" | docker login \
+                            -u "$DOCKER_USERNAME" \
+                            --password-stdin
+
+                        echo "Pushing backend image..."
+                        docker tag hrms-backend:${BUILD_NUMBER} \
+                            $DOCKER_USERNAME/hrms-backend:${BUILD_NUMBER}
+
+                        docker push \
+                            $DOCKER_USERNAME/hrms-backend:${BUILD_NUMBER}
+
+                        echo "Pushing frontend image..."
+                        docker tag hrms-frontend:${BUILD_NUMBER} \
+                            $DOCKER_USERNAME/hrms-frontend:${BUILD_NUMBER}
+
+                        docker push \
+                            $DOCKER_USERNAME/hrms-frontend:${BUILD_NUMBER}
+
+                        echo "Docker images pushed successfully!"
+                    '''
+                }
+            }
+        }
+
+
     }
 }
