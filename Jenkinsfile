@@ -15,6 +15,7 @@ pipeline {
                         '''
                     }
                 }
+        }
         stage('Backend Build') {
             steps {
                 dir('backend/hrms') {
