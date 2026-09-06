@@ -23,7 +23,7 @@ services:
 
 
   backend:
-    image: hrms-backend:1.0
+    image: developeranuj/hrms-backend:latest
     container_name: hrms-backend
 
     depends_on:
@@ -35,7 +35,8 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/hrms_db
       DB_USERNAME: postgres
       DB_PASSWORD: root
-      JWT_SECRET: 1opCuyjUk8RFCS8zxUtxWMia010E318Uw0p9zILuSTk=
+      JWT_SECRET: hZ1CmzXnhXQiUdfgQUOK84s9j/YgiXHhKk8/OA4g7vE=
+
 
     ports:
       - "8082:8082"
@@ -45,7 +46,7 @@ services:
 
 
   frontend:
-    image: hrms-frontend:1.0
+    image: developeranuj/hrms-frontend:latest
     container_name: hrms-frontend
 
     depends_on:
