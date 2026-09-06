@@ -65,12 +65,21 @@ pipeline {
                     docker --version
 
                     echo "Building backend image..."
-                    docker build -t hrms-backend:${BUILD_NUMBER} backend/hrms
+
+                    docker build \
+                        -t hrms-backend:${BUILD_NUMBER} \
+                        -t hrms-backend:latest \
+                        backend/hrms
 
                     echo "Building frontend image..."
-                    docker build -t hrms-frontend:${BUILD_NUMBER} frontend/hrms-ui
+
+                    docker build \
+                        -t hrms-frontend:${BUILD_NUMBER} \
+                        -t hrms-frontend:latest \
+                        frontend/hrms-ui
 
                     echo "Docker images:"
+
                     docker images | grep -E "hrms-backend|hrms-frontend"
                 '''
             }
@@ -94,19 +103,39 @@ pipeline {
                             -u "$DOCKER_USERNAME" \
                             --password-stdin
 
-                        echo "Pushing backend image..."
+                        echo "Tagging backend images..."
+
                         docker tag hrms-backend:${BUILD_NUMBER} \
                             $DOCKER_USERNAME/hrms-backend:${BUILD_NUMBER}
 
+                        docker tag hrms-backend:latest \
+                            $DOCKER_USERNAME/hrms-backend:latest
+
+                        echo "Pushing backend images..."
+
                         docker push \
                             $DOCKER_USERNAME/hrms-backend:${BUILD_NUMBER}
 
-                        echo "Pushing frontend image..."
+                        docker push \
+                            $DOCKER_USERNAME/hrms-backend:latest
+
+
+                        echo "Tagging frontend images..."
+
                         docker tag hrms-frontend:${BUILD_NUMBER} \
                             $DOCKER_USERNAME/hrms-frontend:${BUILD_NUMBER}
 
+                        docker tag hrms-frontend:latest \
+                            $DOCKER_USERNAME/hrms-frontend:latest
+
+                        echo "Pushing frontend images..."
+
                         docker push \
                             $DOCKER_USERNAME/hrms-frontend:${BUILD_NUMBER}
+
+                        docker push \
+                            $DOCKER_USERNAME/hrms-frontend:latest
+
 
                         echo "Docker images pushed successfully!"
                     '''
