@@ -142,6 +142,26 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            steps {
+                sh '''
+                    export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+                    echo "Starting deployment..."
+
+                    docker compose pull
+
+                    docker compose up -d
+
+                    echo "Checking containers..."
+
+                    docker compose ps
+
+                    echo "Deployment completed successfully!"
+                '''
+            }
+        }
+
 
 
     }
